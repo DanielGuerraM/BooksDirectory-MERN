@@ -1,0 +1,26 @@
+const bcrypt = require('bcrypt');
+const loginController = {};
+
+const User = require('../models/users');
+
+loginController.postUser = async(req, res) => {
+    const { email, password} = req.body;
+    console.log(req.body);
+    User.findOne({email})
+    .then((user) => {
+        if(!user){
+            return res.json({ Message: 'The user does not exist or has not been confirmed'})
+        }
+        
+        bcrypt.compare(password, user.password)
+        .then((isCorrect) => {
+            if(!isCorrect){
+                return res.json({ Message: 'Incorrect password' })
+            }
+
+            res.json({Message: 'correct'});
+        })
+    })
+}
+
+module.exports = loginController;
