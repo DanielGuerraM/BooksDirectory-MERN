@@ -9,7 +9,7 @@ export function Login() {
 
   const navigate = useNavigate();
 
-  const LOGIN_ENDPOINT = 'http://localhost:4000/api/users'
+  const LOGIN_ENDPOINT = 'http://localhost:4000/api/users/login'
 
   const [inputs, setInputs] = useState({
     email: '',

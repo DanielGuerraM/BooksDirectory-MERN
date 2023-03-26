@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {getUsers, getUser} = require('../controllers/user.controller');
+const { getUsers, getUser } = require('../controllers/user.controller');
 const { postUsers } = require('../controllers/register.controller');
 const { postUser } = require('../controllers/login.controller');
 
@@ -9,7 +9,7 @@ const { postUser } = require('../controllers/login.controller');
 router.route('/')
     .get(getUsers);
 
-router.route('/')
+router.route('/login')
     .post(postUser)
 
 router.route('/register')
