@@ -13,6 +13,7 @@ registerController.postUsers = async (req, res) => {
             return res.json({Message: `The email ${email} is already registered`});
         }
         else if(!names || !lastname || !email || !userName || !password){
+            console.log(req.body);
             return res.json({Message: 'All fields are required'});
         }
         else{
@@ -22,8 +23,8 @@ registerController.postUsers = async (req, res) => {
                     const newUser = new User({
                         names: names,
                         lastname: lastname,
-                        email: email,
                         userName: userName,
+                        email: email,
                         password: hashedPassword,
                         date: date
                     });
@@ -31,7 +32,6 @@ registerController.postUsers = async (req, res) => {
                     newUser.save()
                     .then((user) => {
                         res.json({
-                            Message: 'User registred successfully',
                             newUser
                         });
                     })

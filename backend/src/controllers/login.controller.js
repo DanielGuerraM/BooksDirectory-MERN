@@ -6,6 +6,8 @@ const User = require('../models/users');
 loginController.postUser = async(req, res) => {
     const { email, password} = req.body;
     console.log(req.body);
+
+    
     User.findOne({email})
     .then((user) => {
         if(!user){
@@ -18,8 +20,13 @@ loginController.postUser = async(req, res) => {
                 return res.json({ Message: 'Incorrect password' })
             }
 
-            res.json({Message: 'correct'});
+            res.json({
+                user
+            });
         })
+    })
+    .catch((err) =>{
+        res.status(400).json(err)
     })
 }
 

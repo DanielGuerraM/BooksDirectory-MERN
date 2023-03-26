@@ -1,21 +1,89 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom';
+import { useState } from 'react'
+import { useNavigate } from 'react-router';
 import axios from 'axios';
 
 import './register.scss'
 
-export default class register extends Component {
+export function Register() {
 
-  render() {
+  const navigate = useNavigate();
+
+  const REGISTER_ENDPOINT = 'http://localhost:4000/api/users/register'
+
+  const [inputs, setInputs] = useState({
+    names: '',
+    lastname: '',
+    userName: '',
+    email: '',
+    password: ''
+  });
+
+
+  const onChange = (e) => {
+    setInputs({ ...inputs, [e.target.name]: e.target.value })
+  }
+
+  const [message, setMessage] = useState();
+  const [loading, setLoading] = useState(false);
+
+  const { names, lastname, userName, email, password } = inputs;
+
+  const onSubmit = async(e) => {
+    e.preventDefault();
+
+    if(names !== '' && lastname !== '' && userName !== '' && email !== '' && password !== ''){
+      const NewUser = {
+        names,
+        lastname,
+        userName,
+        email,
+        password
+      };
+
+      setLoading(true);
+      await axios
+      .post(REGISTER_ENDPOINT, NewUser)
+      .then(({ data }) => {
+        setMessage(data.Message);
+        setInputs({names: '', lastname: '', userName: '', email: '', password: ''});
+        setTimeout(() => {
+          setMessage('');
+          setLoading(false);
+          if(data.newUser){
+            navigate('/');
+          }
+        }, 2000);
+      })
+      .catch((err) => {
+        setMessage('Something went wrong');
+        setTimeout(() => {
+          setMessage('');
+          setLoading(false);
+        }, 2000);
+      })
+    }
+    else{
+      setLoading(true);
+      setMessage('All fields are required');
+      setTimeout(() => {
+        setMessage('');
+        setLoading(false);
+      }, 2000)
+    }
+  }
+
     return (
       <div className='form-register-container'>
+        {message && <div className='formMessage'><span className='span'></span>{message}</div>}
         <h1>Books directory</h1>
         <h2>Register</h2>
-        <form>
+        <form onSubmit={(e) => onSubmit(e)}>
           <div className='input-register-container'>
             <div className='left-register'>
               <label htmlFor='names'>Names</label>
               <input
+                onChange = {(e) => onChange(e)}
+                value = {names}
                 type='text'
                 id='names'
                 name='names'
@@ -28,14 +96,36 @@ export default class register extends Component {
               <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
             </svg>
           </div>
+
           <div className='input-register-container'>
             <div className='left-register'>
               <label htmlFor='lastname'>Last name</label>
               <input
+                onChange = {(e) => onChange(e)}
+                value = {lastname}
                 type='text'
                 id='lastname'
                 name='lastname'
                 placeholder='Your last name'
+                autoComplete='off'/>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path>
+              <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+            </svg>
+          </div>
+          
+          <div className='input-register-container'>
+            <div className='left-register'>
+              <label htmlFor='username'>User name</label>
+              <input
+                onChange = {(e) => onChange(e)}
+                value = {userName}
+                type='text'
+                id='username'
+                name='userName'
+                placeholder='Your user name'
                 autoComplete='off'/>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -49,6 +139,8 @@ export default class register extends Component {
             <div className='left-register'>
               <label htmlFor='email'>Email</label>
               <input
+                onChange = {(e) => onChange(e)}
+                value = {email}
                 type='email'
                 id='email'
                 name='email'
@@ -65,7 +157,9 @@ export default class register extends Component {
           <div className='input-register-container'>
             <div className='left-register'>
               <label htmlFor='password'>Password</label>
-              <input
+              <input 
+                onChange = {(e) => onChange(e)}
+                value = {password}
                 type='password'
                 id='password'
                 name='password'
@@ -79,10 +173,9 @@ export default class register extends Component {
             </svg>
           </div>
 
-          <button className='button-register' type='submit'>Register</button>
-          <Link className='link-register' to='/'>Already have an account?, log in</Link>
+          <button className='button-register' type='submit'>{loading ? 'Loading...' : 'Register'}</button>
+          <a className='link-register' onClick={() => navigate('/')}>Already have an account?, log in</a>
         </form>
       </div>
     )
-  }
 }

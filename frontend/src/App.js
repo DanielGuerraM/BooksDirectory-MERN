@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes,Route} from 'react-router-dom'
 
-import Login from './components/login';
-import Register from './components/register';
+import { Login } from './components/login';
+import { Register } from './components/register';
 
-function App() {
+export function App() {
   return (
     <Router>
       <div className="container">
@@ -16,5 +16,3 @@ function App() {
     </Router>
   );
 }
-
-export default App;

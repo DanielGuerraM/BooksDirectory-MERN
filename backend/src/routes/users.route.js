@@ -7,6 +7,9 @@ const { postUser } = require('../controllers/login.controller');
 
 
 router.route('/')
+    .get(getUsers);
+
+router.route('/')
     .post(postUser)
 
 router.route('/register')
