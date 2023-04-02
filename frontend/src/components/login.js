@@ -26,7 +26,7 @@ export function Login() {
     setInputs({ ...inputs, [e.target.name]: e.target.value })
   }
 
-  const onSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     if(email !== '' && password !== ''){
@@ -45,7 +45,8 @@ export function Login() {
             setMessage('');
             setLoading(false);
             if(data.user){
-              navigate(`/homepage/${data.user._id}`)
+              localStorage.setItem('token', data?.user.token)
+              navigate(`/homepage`)
             }
           }, 2000)
         })
@@ -72,7 +73,7 @@ export function Login() {
       {message && <div className='formMessage'><span className='span'></span>{message}</div>}
       <h1>Books directory</h1>
       <h2>Log In</h2>
-      <form onSubmit={(e) => onSubmit(e)}>
+      <form onSubmit={(e) => handleLogin(e)}>
         <div className='input-container'>
           <div className='left'>
             <label htmlFor='email'>Email</label>

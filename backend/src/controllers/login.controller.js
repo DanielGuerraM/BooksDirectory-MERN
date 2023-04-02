@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const loginController = {};
 
 const User = require('../models/users');
@@ -20,8 +21,25 @@ loginController.postUser = async(req, res) => {
                 return res.json({ Message: 'Incorrect password' })
             }
 
+            const { id, names, lastname,userName } = user
+
+            const UserData = {
+                id,
+                userName
+            };
+    
+            const token = jwt.sign(UserData, 'Secret', {
+                expiresIn: 3600
+            });
+
             res.json({
-                user
+                user: {
+                    id,
+                    names,
+                    lastname,
+                    userName,
+                    token
+                }
             });
         })
     })

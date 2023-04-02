@@ -4,13 +4,16 @@ const userController = {};
 
 const User = require('../models/users');
 
-userController.getUsers = async(req, res) => {
-    const user = await User.find();
-    res.json(user);
-}
+// userController.getUsers = async(req, res) => {
+//     const user = await User.find();
+//     res.json(user);
+// }
 
 userController.getUser = async(req, res) => {
-    const user = await User.findById(req.params.id)
+
+    const { id } = req.user;
+
+    await User.findById(id)
     .then((user) => {
         if(!user){
             res.json({ Message: 'The user does not exist or has not been confirmed' })
